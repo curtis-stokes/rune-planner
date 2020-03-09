@@ -10,5 +10,16 @@
     "tslint.json": "*",
     "nx.json": "*"
   },
-  "projects": {}
+  "projects": {
+    "rune-planner": {
+      "tags": []
+    },
+    "rune-planner-e2e": {
+      "tags": [],
+      "implicitDependencies": ["rune-planner"]
+    },
+    "rune-planner-api": {
+      "tags": []
+    }
+  }
 }

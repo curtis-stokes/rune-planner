@@ -1,8 +1,172 @@
 {
   "version": 1,
-  "projects": {},
+  "projects": {
+    "rune-planner": {
+      "root": "apps/rune-planner",
+      "sourceRoot": "apps/rune-planner/src",
+      "projectType": "application",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/web:build",
+          "options": {
+            "outputPath": "dist/apps/rune-planner",
+            "index": "apps/rune-planner/src/index.html",
+            "main": "apps/rune-planner/src/main.tsx",
+            "polyfills": "apps/rune-planner/src/polyfills.ts",
+            "tsConfig": "apps/rune-planner/tsconfig.app.json",
+            "assets": [
+              "apps/rune-planner/src/favicon.ico",
+              "apps/rune-planner/src/assets"
+            ],
+            "styles": ["apps/rune-planner/src/styles.scss"],
+            "scripts": [],
+            "webpackConfig": "@nrwl/react/plugins/webpack"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/rune-planner/src/environments/environment.ts",
+                  "with": "apps/rune-planner/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/web:dev-server",
+          "options": {
+            "buildTarget": "rune-planner:build",
+            "proxyConfig": "apps/rune-planner/proxy.conf.json"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "rune-planner:build:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/rune-planner/tsconfig.app.json",
+              "apps/rune-planner/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/rune-planner/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/rune-planner/jest.config.js",
+            "tsConfig": "apps/rune-planner/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "rune-planner-e2e": {
+      "root": "apps/rune-planner-e2e",
+      "sourceRoot": "apps/rune-planner-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/rune-planner-e2e/cypress.json",
+            "tsConfig": "apps/rune-planner-e2e/tsconfig.e2e.json",
+            "devServerTarget": "rune-planner:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "rune-planner:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/rune-planner-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/rune-planner-e2e/**"]
+          }
+        }
+      }
+    },
+    "rune-planner-api": {
+      "root": "apps/rune-planner-api",
+      "sourceRoot": "apps/rune-planner-api/src",
+      "projectType": "application",
+      "prefix": "rune-planner-api",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/rune-planner-api",
+            "main": "apps/rune-planner-api/src/main.ts",
+            "tsConfig": "apps/rune-planner-api/tsconfig.app.json",
+            "assets": ["apps/rune-planner-api/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/rune-planner-api/src/environments/environment.ts",
+                  "with": "apps/rune-planner-api/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "rune-planner-api:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "config": "apps/rune-planner-api/.eslintrc",
+            "tsConfig": [
+              "apps/rune-planner-api/tsconfig.app.json",
+              "apps/rune-planner-api/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/rune-planner-api/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/rune-planner-api/jest.config.js",
+            "tsConfig": "apps/rune-planner-api/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    }
+  },
   "cli": {
-    "defaultCollection": "@nrwl/workspace"
+    "defaultCollection": "@nrwl/react"
   },
   "schematics": {
     "@nrwl/workspace": {
@@ -17,10 +181,16 @@
     },
     "@nrwl/react": {
       "application": {
-        "linter": "eslint"
+        "style": "scss",
+        "linter": "eslint",
+        "babel": true
+      },
+      "component": {
+        "style": "scss"
       },
       "library": {
-        "linter": "eslint"
+        "style": "scss",
+        "linter": "tslint"
       }
     },
     "@nrwl/next": {
@@ -56,5 +226,6 @@
         "linter": "eslint"
       }
     }
-  }
+  },
+  "defaultProject": "rune-planner"
 }
